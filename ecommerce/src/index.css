@@ -1,0 +1,245 @@
+@import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Cedarville+Cursive&family=Fjalla+One&family=Momo+Trust+Sans:wght@200..800&family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Oswald:wght@200..700&family=Outfit:wght@100..900&family=Work+Sans:ital,wght@0,100..900;1,100..900&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --sky: #00aeff;
+  --body: #020617;
+  --yellow: rgb(233, 178, 0);
+  --green: rgb(62, 253, 110);
+
+}
+
+.bg_sky {
+  background-color: var(--sky);
+  transition: .3s
+}
+
+.bg_body {
+  background-color: var(--body);
+  transition: .3s
+}
+
+.bg_yellow {
+  background-color: var(--yellow);
+  transition: .3s
+}
+
+.bg_green {
+  background-color: var(--green);
+  transition: .3s
+}
+
+.color_sky {
+  color: var(--sky);
+  transition: .3s
+}
+
+.color_body {
+  color: var(--body);
+  transition: .3s
+}
+
+.color_yellow {
+  color: var(--yellow);
+  transition: .3s
+}
+
+.color_green {
+  color: var(--green);
+  transition: .3s
+}
+
+
+body {
+  width: 100%;
+  height: 100%;
+  background-color: var(--body);
+}
+
+.al {
+  background-color: rgb(135, 255, 98);
+}
+
+/* header styling start//////////////////// */
+
+.top_header {
+  height: 50px;
+  background-color: var(--body);
+}
+
+.search {
+  width: 100%;
+  max-width: 500px;
+  min-width: 150px;
+}
+
+.search input {
+  width: 100%;
+  height: 35px;
+  border: none;
+  outline: none;
+  font-size: 18px;
+  border: 1px solid rgb(59, 59, 59);
+  background-color: #070d24;
+}
+
+.search .s_icon {
+  left: 0px;
+  transform: translateX(10px);
+}
+
+.inside_bt {
+  padding: 2px;
+  margin-left: 100%;
+  transform: translateX(-65%);
+  height: 25px;
+}
+
+.search input:focus {
+  border: 1px solid var(--green);
+  box-shadow: 0px 0px 8px var(--green);
+}
+
+.navb {
+  background-color: transparent;
+  width: 100%;
+  border: 1px solid transparent;
+
+}
+
+.navb_active {
+  background-color: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(4px);
+  border-top: none;
+  width: 100%;
+  position: -webkit-sticky
+}
+
+.link {
+  position: relative;
+  text-decoration: none;
+  color: var(--green);
+}
+
+.link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -2px;
+  width: 0%;
+  height: 2px;
+  background-color: var(--green);
+  transition: width 0.3s ease;
+}
+
+.link:hover::after {
+  width: 100%;
+}
+
+/* footer section styling is started header */
+
+.social {
+  border: 1px solid transparent
+}
+
+.social:hover {
+  border: 1px solid currentColor;
+
+}
+
+/* hero styling is strated here//////////////////// */
+.text_shadow {
+  text-shadow: 0px 0px 10px rgb(0, 0, 0);
+}
+
+/* Swiper navigation arrows ka color dark theme ke liye */
+.swiper-button-next,
+.swiper-button-prev {
+  color: #a78bfa;
+  background-color: rgba(31, 41, 55, 0.7);
+  border-radius: 50%;
+  padding: 10px;
+  width: 40px;
+  height: 40px;
+  opacity: 0.8;
+  transition: opacity 0.3s ease;
+}
+
+.swiper-button-next:hover,
+.swiper-button-prev:hover {
+  opacity: 1;
+  background-color: rgba(55, 65, 81, 0.9);
+}
+
+.swiper-pagination-bullet {
+  background-color: #eef0f3;
+  opacity: 0.7;
+}
+
+.swiper-pagination-bullet-active {
+  background-color: #a78bfa;
+  opacity: 1;
+}
+
+.swiper-button-next::after,
+.swiper-button-prev::after {
+  font-size: 1.5rem !important;
+  color: #e0e7ff;
+}
+
+.mySwiper {
+  width: 100%;
+  height: 384px;
+}
+
+@media (max-width: 768px) {
+  .mySwiper {
+    height: 320px;
+  }
+}
+
+/* all product is started here yellow   */
+
+.card {
+  overflow: hidden;
+  border: 1px solid green;
+}
+
+.card:hover {
+  border: 1px solid rgb(255, 196, 3);
+
+}
+
+.float_bt {
+  left: 100%;
+  width: 50%;
+  transition: .5s;
+  top: 91%;
+  font-weight: bold;
+  font-size: 14px;
+  padding:2px;
+}
+
+.float_bt:hover {
+  filter: brightness(140%);
+}
+
+.float_bt:active {
+  filter: brightness(100%);
+}
+
+.card:hover .float_bt {
+  left: 45%;
+}
+
+@media (max-width: 768px) {
+  .float_bt {
+    font-size: 12px;
+  }
+}
