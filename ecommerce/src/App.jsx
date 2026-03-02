@@ -1,25 +1,57 @@
 import React from 'react';
-import Header_footer from './components/header&footer';
-import Hero from './components/hero/hero'
-import Catagory from './components/catagory/catagory';
-import Products from './components/trending/trending_products'
-import Todaydeals from './components/todaydeals/todaydeals'
-import Allproduct from './components/allproduct/allproduct'
-import Features from './components/services/services'
+import Home from './pages/home'
+import About from './pages/about'
+import Product from './pages/product'
+import Allproducts from './pages/all_products';
+import Prd_priview from './pages/prd_priview';
+import Productform from './pages/form';
+import Context from './components/context/context'
+import Login from './components/login_signup_form/login'
+import Register from './components/login_signup_form/register'
+import Dashboard from './pages/dashboard'
+import SimpleSideNav from './pages/sidevav';
+// import Orderform from './pages/orderform'
+import ProductWithvarient from './pages/orderform'
+
+// import Dashboard from './pages/dashboard'
+
+import { Routes, Route, useLocation } from 'react-router-dom'
+
+import { useEffect } from 'react';
+
+
 
 function App() {
+  const {pathname}= useLocation()
+  useEffect(()=>{
+    window.scrollTo({
+      top:0,
+      behavior:'smooth'
+    })
+  },[pathname])
+
+  
   return (
-    <>
-      <Header_footer>
-        <Hero />
-        <Catagory/>
-         <Products/>
-         
-         <Todaydeals/>
-         <Allproduct/>
-         <Features/>
-      </Header_footer>
-    </>
+     <Context>
+    <Routes>
+    
+      <Route path='/' element={<Home />} />
+      <Route path='/about' element={<About />} />
+      <Route path='/product' element={<Product />} />
+      <Route path='/all/products' element={<Allproducts/>} />
+      <Route path='/product/priview/:id' element={<Prd_priview/>} />
+      <Route path='/productform' element={<Productform/>} />
+      <Route path='/login' element={<Login/>}/>
+      <Route path='/register' element={<Register/>}/>
+      <Route path='/dashboard' element={<Dashboard/>} />
+      <Route path='/orderform' element={<ProductWithvarient/>} />
+      <Route path='/sidenav' element={<SimpleSideNav/>} />
+
+    
+    </Routes>
+    </Context>
+    
+   
 
   )
 }

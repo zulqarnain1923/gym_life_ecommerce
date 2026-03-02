@@ -17,9 +17,7 @@ function Hero() {
     const interval = setInterval(() => {
       if (count.current + 1 === videos.length) {
         setCurrent(videos[count.current])
-        console.log(count.current)
         count.current = 0
-        console.log(count.current)
       }
       else {
         setCurrent(videos[count.current])
@@ -32,8 +30,8 @@ function Hero() {
 
   return (
     <>
-      <div className="relative w-full h-[480px] " style={{"margin-top":"-40px"}}>
-        <video src={current} autoPlay loop muted className="absolute top-0 left-0 w-full h-full object-cover transition-opacity duration-1000 blur" />
+      <div className="relative w-full h-[480px] ">
+        <video src={current} autoPlay loop muted className="absolute top-0 left-0 w-full h-full object-cover transition-opacity duration-1000 " />
         <div className='absolute h-[100%] w-[100%] flex flex-col items-center  ' >
           <p></p>
           <p className='text-white w-[100%] text-[60px] lg:text-[70px]  font-bold text-center mt-[0px] mt-5 pt-5 text_shadow font-[Oswald]' >FORAGE YOUR AURA</p>

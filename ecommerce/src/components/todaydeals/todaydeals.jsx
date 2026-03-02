@@ -1,13 +1,14 @@
 import React from 'react';
 
-import shoes from '../../assets/images/shoes5.webp'
-import shake from '../../assets/images/shake3.webp'
-import hoody from '../../assets/images/hoody2.webp'
-import shirt from '../../assets/images/shirt4.webp'
+import shoes from '../../assets/images/download1.webp'
+import shake from '../../assets/images/download2.webp'
+import hoody from '../../assets/images/wear.webp'
+import shirt from '../../assets/images/accessories.webp'
 // Swiper React components
 import { Swiper, SwiperSlide } from 'swiper/react';
 // Swiper modules
 import { Navigation, Pagination, Autoplay, A11y } from 'swiper/modules';
+import { useNavigate } from 'react-router-dom';
 
 // Swiper styles
 import 'swiper/css';
@@ -18,6 +19,8 @@ import 'swiper/css/autoplay';
 
 
 const TodayDealsSlider = () => {
+
+   const navigation=useNavigate()
   const dealsData = [
     {
       id: 1,
@@ -45,7 +48,7 @@ const TodayDealsSlider = () => {
     },
     {
       id: 4,
-      tagline: "Sales on Bottom Wearing!",
+      tagline: "Sales on Accessories!",
       title: "20% of sale",
       description: "Pamper yourself with top brands at incredible discounts.",
       cta: "View Products",
@@ -77,7 +80,7 @@ const TodayDealsSlider = () => {
             <SwiperSlide key={deal.id} className="p-2 flex flex-col justify-center items-center ">
               <div className='flex'>
                 <div className="w-58 h-45 md:w-94 md:h-60 bg-gray-700 flex items-center justify-center rounded-lg relative">
-                  <img src={deal.imageUrl} alt={deal.title} className="w-full h-full object-cover rounded-lg" />
+                  <img src={deal.imageUrl} alt={deal.title} className="w-full h-full object-cover rounded-lg"  onClick={()=> navigation('/all/products')}/>
                 </div>
                 <div className='flex flex-col items-center justify-center w-[100%]'>
                    <p className="text-sm sm:text-md md:text-lg text-yellow-400 text-center mb-2 font-semibold uppercase ">{deal.tagline}</p>
@@ -87,7 +90,7 @@ const TodayDealsSlider = () => {
                   <p className="text-gray-300 text-center text-[12px] sm:text-[14px] md:text-md mb-4 max-w-md px-2 sm:px-3">
                     {deal.description}
                   </p>
-                  <button className="bg-indigo-600 hover:bg-yellow-600 text-white font-bold p-1  rounded-3 transition duration-300 ease-in-out">
+                  <button className="bg-indigo-600 hover:bg-yellow-600 text-white font-bold p-1  rounded-3 transition duration-300 ease-in-out" onClick={()=> navigation('/all/products')}>
                     {deal.cta}
                   </button>
                 </div>
