@@ -14,7 +14,7 @@ export default function Context({ children }) {
     const [showcart, setshowcart] = useState(false)
     const [orderprd,setorderprd]=useState({})
     const [ requestproduct , setrequestproduct]=useState()
-    const [showuser,setshowuser]=useState(true)
+    const [showuser,setshowuser]=useState(false)
 
     const url = 'http://127.0.0.1:8000'
     
@@ -188,14 +188,15 @@ export default function Context({ children }) {
         }
     }
 
-    const placeorder= async()=>{
+    const placeorder= async(data)=>{
         let refresh=localStorage.getItem('refresh')
         let access=localStorage.getItem('access')
         if (refresh){
             try{
-            const res =await axios.post(`${url}/order/add/`,orderprd,{headers:{Authorization:`Bearer ${access}`}})
+            const res =await axios.post(`${url}/order/add/`,{...orderprd,...data},{headers:{Authorization:`Bearer ${access}`}})
             console.log(res.data)
-
+            alert('order is placed successfully')
+            return true
             }
             catch (error){
                 console.log({error:error.response})
@@ -203,11 +204,15 @@ export default function Context({ children }) {
                     const isauth=await checkuserauth()
                     if (isauth){
                         let access=localStorage.getItem('access')
-                        const res = await axios.post (`${url}/order/add/`,orderprd,{headers:{Authorization:`Bearer ${access}`}})
+                        const res = await axios.post (`${url}/order/add/`,{...orderprd,...data},{headers:{Authorization:`Bearer ${access}`}})
                         console.log(res.data)
+                        alert('order is placed successfully')
+                        return true
                     }
                 }else{
                     console.log(error.response.data)
+                    alert(error.response.data.status)
+                    return false
                 }
             }
         }else{
@@ -223,7 +228,7 @@ export default function Context({ children }) {
         if (type === 'cartitem') { cartitem(data) }
         if (type === 'getcartitem') { getcartitem() }
         if (type === 'deletecartitem') { deletecartitem(data) }
-        if (type === 'placeorder') {placeorder()}
+        if (type === 'placeorder') {placeorder(data)}
         if (type === 'logout') { logout()}
         if (type === 'check') {checks()}
         }

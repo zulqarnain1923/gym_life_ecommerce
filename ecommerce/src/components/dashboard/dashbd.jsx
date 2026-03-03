@@ -19,8 +19,6 @@ import {
 } from "recharts";
 
 
-
-
 const salesData = [
   { name: "Jan", sales: 4000 },
   { name: "Feb", sales: 3000 },
@@ -37,9 +35,7 @@ const Dashbd = () => {
   const fetchdata = async () => {
     try {
       const res = await axios.get(`${data.url}/order/month/data/`)
-      console.log(res.data, 'helo')
       setmonthdata({...res.data})
-
     }
     catch (error) {
       alert(error.response.data)
@@ -53,7 +49,7 @@ useEffect(() => {
 
 const chartdata = monthdata?.monthly_data?.map(item => ({
   name: new Date(item.month).toLocaleString('default', { month: 'short' }),
-  sales: item.total_amount  // Revenue
+  revenue: item.total_amount  // Revenue
 }))
 
 const orderschartdata = monthdata?.monthly_data?.map(item => ({
@@ -107,14 +103,14 @@ return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8 p-2 mt-4 border-t border-gray-400 ">
       <Card className="rounded-2xl shadow-lg  ">
         <CardContent className="p-2">
-          <h3 className="mb-4 font-semibold text-white">Monthly Sales</h3>
+          <h3 className="mb-4 font-semibold text-white">Monthly Revenue</h3>
           <ResponsiveContainer width="100%" height={300}>
             <LineChart data={chartdata} >
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis dataKey="name" />
-              <YAxis dataKey='sales' />
+              <YAxis dataKey='revenue' />
               <Tooltip />
-              <Line type="monotone" dataKey="sales" stroke="#6366f1" />
+              <Line type="monotone" dataKey="revenue" stroke="#6366f1" />
             </LineChart>
           </ResponsiveContainer>
         </CardContent>
@@ -122,7 +118,7 @@ return (
 
       <Card className="rounded-2xl shadow-lg ">
         <CardContent className="p-2">
-          <h3 className="mb-4 font-semibold text-white">Revenue</h3>
+          <h3 className="mb-4 font-semibold text-white">Monthly Sales</h3>
           <ResponsiveContainer width="100%" height={300}>
             <BarChart data={orderschartdata}>
               <CartesianGrid strokeDasharray="3 3" />

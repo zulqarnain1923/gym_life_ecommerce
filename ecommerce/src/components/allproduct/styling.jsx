@@ -9,7 +9,7 @@ function Styling({products , navigate}) {
     const navigation=useNavigate()
     return (
         <>
-            <div className='px-3 max-w-[1150px] mx-auto pb-4'>
+            <div className='px-3 max-w-[1150px] mx-auto pb-4' id='collection'>
                 
                 <div className='grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-3 overflowx-scroll py-5'>
                     {products? products.map((item, index) => (

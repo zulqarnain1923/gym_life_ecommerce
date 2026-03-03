@@ -3,6 +3,8 @@ import Dashbd from "../components/dashboard/dashbd";
 import Order from "../components/dashboard/order";
 import Product from "../components/dashboard/product"
 import {User,Menu,} from "lucide-react";
+import { useSearchParams } from "react-router-dom";
+import { TbH1 } from "react-icons/tb";
 
 
 // Custom UI Compnent
@@ -27,9 +29,14 @@ const menuitem=["Dashboard", "Orders", "Products"]
 // Main Component //
 
 export default function AdminDashboard() {
+  const [searchParams]=useSearchParams()
+  const password= searchParams.get('password')
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [flag,setflag]=useState(0)
 
+
+
+  if (password==='123786'){
   return (
     <div className="bg-gray-200  fixed ">
       <div className="flex">
@@ -55,12 +62,12 @@ export default function AdminDashboard() {
           <div className="flex justify-between items-center bg-gray-900 px-4 h-[50px] py-4 w-[100%] border-b-1 border-gray-400">
             
             <div className="">
-              <Input placeholder="Search..." />
+              <p className="font-bold text-[30px] text-yellow-500 mt-2"><span className="text-green-500">Forge</span> Dashboard</p>
             </div>
 
             <div className="flex items-center gap-4">
 
-              <User className="text-white"/>
+              
 
             </div>
           </div>
@@ -75,4 +82,7 @@ export default function AdminDashboard() {
       </div>
     </div>
   );
+}else{
+  return(<h1 className="text-white">Unauthorized</h1>)
+ }
 }

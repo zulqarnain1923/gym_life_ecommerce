@@ -5,7 +5,7 @@ import Styling from './styling'
 function Allproducts({products,navigate}) {
     return (
         <>
-            <Styling products={products} navigate={navigate} />
+            <Styling products={products} navigate={navigate}  />
         </>
     )
 }

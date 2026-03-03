@@ -1,7 +1,7 @@
 import React from 'react';
 import Home from './pages/home'
 import About from './pages/about'
-import Product from './pages/product'
+
 import Allproducts from './pages/all_products';
 import Prd_priview from './pages/prd_priview';
 import Productform from './pages/form';
@@ -9,7 +9,7 @@ import Context from './components/context/context'
 import Login from './components/login_signup_form/login'
 import Register from './components/login_signup_form/register'
 import Dashboard from './pages/dashboard'
-import SimpleSideNav from './pages/sidevav';
+
 // import Orderform from './pages/orderform'
 import ProductWithvarient from './pages/orderform'
 
@@ -37,7 +37,7 @@ function App() {
     
       <Route path='/' element={<Home />} />
       <Route path='/about' element={<About />} />
-      <Route path='/product' element={<Product />} />
+      {/* <Route path='/product' element={<Product />} /> */}
       <Route path='/all/products' element={<Allproducts/>} />
       <Route path='/product/priview/:id' element={<Prd_priview/>} />
       <Route path='/productform' element={<Productform/>} />
@@ -45,7 +45,7 @@ function App() {
       <Route path='/register' element={<Register/>}/>
       <Route path='/dashboard' element={<Dashboard/>} />
       <Route path='/orderform' element={<ProductWithvarient/>} />
-      <Route path='/sidenav' element={<SimpleSideNav/>} />
+      {/* <Route path='/sidenav' element={<SimpleSideNav/>} /> */}
 
     
     </Routes>

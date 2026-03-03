@@ -98,9 +98,13 @@ const OpenStreetMapForm = ({ toggle }) => {
       return;
     }
     
-    data.setorderprd({...data.orderprd,...formData,address:query});
-    data.runfunctions(null,'placeorder',null);
-    alert('Order Placed Successfully!');
+    const s= data.setorderprd({...data.orderprd,...formData,address:query});
+    const res=data.runfunctions(null,'placeorder',{...formData,address:query});
+    console.log(s)
+    setFormData({...da.current})
+    setQuery('')
+    toggle(true)
+    
   };
  
   return (
