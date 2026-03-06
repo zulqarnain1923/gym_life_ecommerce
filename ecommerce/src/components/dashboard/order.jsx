@@ -2,62 +2,64 @@ import React, { useContext, useEffect, useState } from 'react'
 import { Card, CardContent } from './component'
 import { Authcontext } from '../context/context'
 import axios from 'axios';
-import { X } from 'lucide-react';
+import { RefreshCcw, X } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 
 const Order = () => {
-  const navigation=useNavigate()
   const [order, setorder] = useState()
   const [params, setparams] = useState({ status: 'pending' })
   const data = useContext(Authcontext)
   const [orderupdate, setorderupdate] = useState({ id: null, status: '' })
   const [orderdetail, setorderdetail] = useState([])
   const [check, setcheck] = useState(true)
+  const navigation = useNavigate()
 
   const getorder = async () => {
     
-    const refresh = localStorage.getItem('refresh')
-    const access = localStorage.getItem('access')
-    if (refresh) {
-      try {
-        const res = await axios.get(`${data.url}/order/add/`, { headers: { Authorization: `Bearer ${access}` }, params: { ...params }})
-        setorder(res.data)
-        
-      }
-      catch (error) {
-        console.log(error.response.status)
-        if(error.response.status===401){
-          const isauth=await data.runfunctions(null,'checkuser',null)
-          if (isauth){
-            const newaccess=localStorage.getItem('access')
-            const res = await axios.get(`${data.url}/order/add/`, { headers: { Authorization: `Bearer ${newaccess}`}, params: { ...params }})
-            setorder(res.data)
-
+      const refresh = localStorage.getItem('refresh')
+      const access = localStorage.getItem('access')
+      if (refresh) {
+        // data.runfunctions(null,'checkuser',null)
+        try {
+          const res = await axios.get(`${data.url}/order/add/`, { headers: { Authorization: `Bearer ${access}`}, params: { ...params } } )
+          setorder(res.data)
+        }
+        catch (error) {
+          if (error.response && error.response.status === 401) {
+            alert('please login with your staff account')
+            const user =await data.runfunctions(null, 'checkuser', null)
+            if (user) {
+              const newaccess=localStorage.getItem('access')
+              try{
+              const res = await axios.get(`${data.url}/order/add/`, { headers: { Authorization: `Bearer ${access}`}, params: { ...params }  })
+              setorder(res.data)
+              }catch(error){
+                if (error.response && error.response.status===403){
+                  alert('please login with your staff account')
+                  navigation('/login')
+                }
+              }
+            }
           }
-          if (error.response.msg)
-          console.log(error.response.msg)
         }
       }
-    }else{
-      navigation('/login')
+      else {
+        alert('please register first and approve your staff account')
+      }
+
     }
-  }
+
 
   const updateorder = async () => {
-    const refresh = localStorage.getItem('refresh')
-    const access = localStorage.getItem('access')
-    if (refresh) {
-      try {
-        const res = await axios.put(`${data.url}/order/add/`, { ...orderupdate },{ headers: { Authorization: `Bearer ${access}` } })
-        
-      }
-      catch (error) {
-         if (error.response.msg)
-          console.log(error.response.msg)
-      }
-
+    try {
+      const res = await axios.put(`${data.url}/order/add/`, { ...orderupdate })
+      console.log(res.data)
     }
+    catch (error) {
+      console.log(error.response.data)
+    }
+
   }
 
   useEffect(() => {
@@ -71,7 +73,8 @@ const Order = () => {
 
   function add_detail(index) {
     setorderdetail([order[index]])
-    
+    setcheck(false)
+    console.log('helo')
   }
 
   return (
@@ -124,7 +127,7 @@ const Order = () => {
               <tbody>
                 {order && order.length > 1 ? order.map((o, index) => (
                   <tr key={index} className="border-b hover:bg-gray-100 dark:hover:bg-gray-700 text-white" onClick={() => add_detail(index)}>
-                    <td className="border px-1 cursor-pointer" onClick={()=> setcheck(false)}>{o.id}</td>
+                    <td className="border px-1">{o.id}</td>
                     <td className="border px-1">{o.full_name}</td>
                     <td className="border px-1">{o.total_amount}</td>
                     <td className="border px-1">
