@@ -16,7 +16,8 @@ export default function Context({ children }) {
     const [ requestproduct , setrequestproduct]=useState()
     const [showuser,setshowuser]=useState(false)
 
-    const url = 'http://127.0.0.1:8000'
+    // const url = 'http://127.0.0.1:8000'
+    const url = 'https://zulqarnain111.pythonanywhere.com'
     
     const checkuserauth = async () => {
         let refresh_token = localStorage.getItem('refresh')
