@@ -1,5 +1,5 @@
 
-import React, { useState, useRef, useEffect,useContext } from "react";
+import React, { useState, useRef, useEffect, useContext } from "react";
 import { motion } from "framer-motion";
 import { Upload, X, Plus } from 'lucide-react'
 import axios from 'axios'
@@ -8,18 +8,23 @@ import { Authcontext } from "../components/context/context";
 
 
 export default function ProductWithVariantsForm() {
-  const data=useContext(Authcontext);
-  const Navigation=useNavigate();
+  const data = useContext(Authcontext);
+  const Navigation = useNavigate();
   const [showimage, setshowimage] = useState([]);
   const refimage = useRef([]);
-  const [product, setProduct] = useState({
+  const tv = { keywords: '', colors: '', sizes: '', weights: '' }
+  const v = { keywords: [], colors: [], sizes: [], weights: [] }
+
+
+  const p = {
     pr_name: "",
     pr_desc: "",
     base_price: "",
     base_stock: "",
     strike_price: "",
     brand: "",
-  });
+  }
+  const [product, setProduct] = useState(p);
 
   // product change and sotre data in state 
   const handleProductChange = (e) => {
@@ -61,47 +66,55 @@ export default function ProductWithVariantsForm() {
       alert('please anter keywords')
     }
     product.keywords.forEach((k, index) => { finaldata.append('keywords', k) })
-    variants.sizes.forEach((s,index) =>{finaldata.append('sizes',s)})
-    variants.colors.forEach((c,index) =>{finaldata.append('colors',c)})
-    variants.weights.forEach((w,index) =>{finaldata.append('weights',w)})
-    
+    variants.sizes.forEach((s, index) => { finaldata.append('sizes', s) })
+    variants.colors.forEach((c, index) => { finaldata.append('colors', c) })
+    variants.weights.forEach((w, index) => { finaldata.append('weights', w) })
+
   }
 
-// submit the form data t backend 
+  // submit the form data t backend 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(product)
     const finalData = { product, variants };
-    console.log("Submitting:", finalData);
     creatformdata()
     call()
   };
 
-// variants add and remove functions 
-  const [tempvariant, setTempvariant] = useState({ keywords:'', colors: '', sizes: '', weights: '' })
-
-  const [variants, setvariants] = useState({ keywords: [], colors: [], sizes: [],  weights: []})
+  // variants add and remove functions 
+  const [tempvariant, setTempvariant] = useState(tv)
+  const [variants, setvariants] = useState(v)
   const handeladd = (e = null, type = 'nul', name) => {
     if (e && e.key === 'Enter') {
-      if (tempvariant[name] === "") { alert('null value cannot be enter') }
+      e.preventDefault()
+
+      if (tempvariant[name] === "") {
+        alert('null value cannot be enter')
+      }
       else {
-        e.preventDefault()
-        setvariants(prev => ({ ...prev, [name]: [...prev[name], tempvariant[name]] }))
-        setProduct(prev => ({ ...prev, [name]: variants[name] }))
+        setvariants(prev => {
+          const update = { ...prev, [name]: [...prev[name], tempvariant[name]] }
+          setProduct(p => ({ ...p, [name]: update[name] }))
+          return update
+        })
         setTempvariant(prev => ({ ...prev, [name]: "" }))
       }
     }
     else if (type === 'keyw') {
       e.preventDefault()
-      if (tempvariant[name] === "") { alert('null value cannot be enter') }
+      if (tempvariant[name] === "") {
+        alert('null value cannot be enter')
+      }
       else {
-        setvariants(prev => ({ ...prev, [name]: [...prev[name], tempvariant[name]] }))
-        setProduct(prev => ({ ...prev, [name]: variants[name] }))
+
+        setvariants(prev => {
+          const update = { ...prev, [name]: [...prev[name], tempvariant[name]] }
+          setProduct(p => ({ ...p, [name]: update[name] }))
+          return update
+        })
         setTempvariant(prev => ({ ...prev, [name]: "" }))
       }
     }
   }
-
   const removeTag = (e, type, index, name) => {
     e.preventDefault()
     if (type === 'keyw') {
@@ -129,10 +142,17 @@ export default function ProductWithVariantsForm() {
   async function call() {
     try {
       const res = await axios.post(`${data.url}/post/`, finaldata);
-      console.log(res.data);
+      if (res.status===201){
+      setProduct(p)
+      setshowimage([])
+      refimage.current = []
+      setvariants({ keywords: [], colors: [], sizes: [], weights: [] })
+      setTempvariant({ keywords: '', colors: '', sizes: '', weights: '' })
+      }
     }
     catch (error) {
-      console.log(error.response.data);
+      error.response ? console.log(error.response.data) : null;
+      error.response ? alert(error.response.data) : null;
     }
   }
 
@@ -142,7 +162,7 @@ export default function ProductWithVariantsForm() {
         <div className="max-w-5xl mx-auto">
           <div className="flex justify-between items-center mb-6">
             <h1 className="text-3xl font-bold h-12">Add Product With Variants</h1>
-            <X  className="border-1 rounded-2 me-3 cursor-pointer" onClick={()=>Navigation(-1)}></X>
+            <X className="border-1 rounded-2 me-3 cursor-pointer" onClick={() => Navigation(-1)}></X>
           </div>
 
           <form onSubmit={handleSubmit} className="p-2 ">
@@ -254,7 +274,7 @@ export default function ProductWithVariantsForm() {
                   className={`w-24 h-24 p-1 flex flex-col items-center justify-center text-center border-2 border-dashed rounded-lg cursor-pointer border-gray-300 hover:bg-gray-100`}>
                   <Upload size={24} className="mx-auto" />
                   <span className="text-[10px] mt-1">Upload</span>
-                  <input type="file" name="images" multiple required onChange={(e)=>handleProductChange(e)} accept=".png,.webp" className="hidden" />
+                  <input type="file" name="images" multiple required onChange={(e) => handleProductChange(e)} accept=".png,.webp" className="hidden" />
                 </label>
               </div>
             </div>
@@ -279,7 +299,7 @@ export default function ProductWithVariantsForm() {
                   </button>
                 </div>
                 <div className="flex flex-wrap gap-2">
-                  {variants.keywords ? variants.keywords.map((c, i) => (
+                  {variants.keywords.length > 0 ? variants.keywords.map((c, i) => (
                     <span key={i} className="px-3 py-1 bg-blue-500/20 text-blue-400 rounded-full text-sm border border-blue-500/50 relative">
                       {c}
                       <button onClick={(e) => removeTag(e, 'keyw', i, 'keywords')} className="absolute -top-2 -right-2 bg-red-500 rounded-pill p-1">
@@ -295,25 +315,25 @@ export default function ProductWithVariantsForm() {
                   <input
                     value={tempvariant.colors}
                     name="colors"
-                    onChange={(e) => setTempvariant({colors:e.target.value})}
-                    onKeyDown={(e) => handeladd(e,null,'colors')}
+                    onChange={(e) => setTempvariant({ colors: e.target.value })}
+                    onKeyDown={(e) => handeladd(e, null, 'colors')}
                     type="text"
                     className={`flex-1 p-2 rounded border-1 bg-gray-700 border-gray-700`}
                     placeholder="e.g. Red"
                   />
-                  <button type="button" onClick={(e) => handeladd(e, 'keyw','colors')} className="p-2 bg-blue-600 rounded">
+                  <button type="button" onClick={(e) => handeladd(e, 'keyw', 'colors')} className="p-2 bg-blue-600 rounded">
                     <Plus size={20} />
                   </button>
                 </div>
                 <div className="flex flex-wrap gap-2">
-                  {variants.colors? variants.colors.map((c, i) => (
+                  {variants.colors ? variants.colors.map((c, i) => (
                     <span key={i} className="px-3 py-1 bg-blue-500/20 text-blue-400 rounded-full text-sm border border-blue-500/50 relative">
                       {c}
-                      <button onClick={(e) => removeTag(e,'keyw', i,'colors')} className="absolute -top-2 -right-2 bg-red-500 rounded-pill p-1">
+                      <button onClick={(e) => removeTag(e, 'keyw', i, 'colors')} className="absolute -top-2 -right-2 bg-red-500 rounded-pill p-1">
                         <X size={12} />
                       </button>
                     </span>
-                  )):null}
+                  )) : null}
                 </div>
               </div>
               <div className="">
@@ -322,25 +342,25 @@ export default function ProductWithVariantsForm() {
                   <input
                     value={tempvariant.sizes}
                     name="sizes"
-                    onChange={(e) => setTempvariant({sizes:e.target.value})}
-                    onKeyDown={(e) => handeladd(e,null,'sizes')}
+                    onChange={(e) => setTempvariant({ sizes: e.target.value })}
+                    onKeyDown={(e) => handeladd(e, null, 'sizes')}
                     type="text"
                     className={`flex-1 p-2 rounded border-1 bg-gray-700 border-gray-700`}
                     placeholder="e.g. Red"
                   />
-                  <button type="button" onClick={(e) => handeladd(e, 'keyw','sizes')} className="p-2 bg-blue-600 rounded">
+                  <button type="button" onClick={(e) => handeladd(e, 'keyw', 'sizes')} className="p-2 bg-blue-600 rounded">
                     <Plus size={20} />
                   </button>
                 </div>
                 <div className="flex flex-wrap gap-2">
-                  {variants.sizes? variants.sizes.map((c, i) => (
+                  {variants.sizes ? variants.sizes.map((c, i) => (
                     <span key={i} className="px-3 py-1 bg-blue-500/20 text-blue-400 rounded-full text-sm border border-blue-500/50 relative">
                       {c}
-                      <button onClick={(e) => removeTag(e,'keyw', i,'sizes')} className="absolute -top-2 -right-2 bg-red-500 rounded-pill p-1">
+                      <button onClick={(e) => removeTag(e, 'keyw', i, 'sizes')} className="absolute -top-2 -right-2 bg-red-500 rounded-pill p-1">
                         <X size={12} />
                       </button>
                     </span>
-                  )):null}
+                  )) : null}
                 </div>
               </div>
               <div className="">
@@ -349,28 +369,28 @@ export default function ProductWithVariantsForm() {
                   <input
                     value={tempvariant.weights}
                     name="weights"
-                    onChange={(e) => setTempvariant({weights:e.target.value})}
-                    onKeyDown={(e) => handeladd(e,null,'weights')}
+                    onChange={(e) => setTempvariant({ weights: e.target.value })}
+                    onKeyDown={(e) => handeladd(e, null, 'weights')}
                     type="text"
                     className={`flex-1 p-2 rounded border-1 bg-gray-700 border-gray-700`}
                     placeholder="e.g. Red"
                   />
-                  <button type="button" onClick={(e) => handeladd(e, 'keyw','weights')} className="p-2 bg-blue-600 rounded">
+                  <button type="button" onClick={(e) => handeladd(e, 'keyw', 'weights')} className="p-2 bg-blue-600 rounded">
                     <Plus size={20} />
                   </button>
                 </div>
                 <div className="flex flex-wrap gap-2">
-                  {variants.weights? variants.weights.map((c, i) => (
+                  {variants.weights ? variants.weights.map((c, i) => (
                     <span key={i} className="px-3 py-1 bg-blue-500/20 text-blue-400 rounded-full text-sm border border-blue-500/50 relative">
                       {c}
-                      <button onClick={(e) => removeTag(e,'keyw', i,'weights')} className="absolute -top-2 -right-2 bg-red-500 rounded-pill p-1">
+                      <button onClick={(e) => removeTag(e, 'keyw', i, 'weights')} className="absolute -top-2 -right-2 bg-red-500 rounded-pill p-1">
                         <X size={12} />
                       </button>
                     </span>
-                  )):null}
+                  )) : null}
                 </div>
               </div>
-              
+
             </div>
 
             <button
