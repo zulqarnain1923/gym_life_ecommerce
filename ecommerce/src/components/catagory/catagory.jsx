@@ -18,7 +18,7 @@ function Catagory() {
     const Navigation=useNavigate()
     const data=useContext(Authcontext)
     const [catagory,setcatagory]=useState({})
-    const ctg=useRef(['All','Diet & Supplements','Gym Apparel','Footer','Accessories'])
+    const ctg=useRef(['All','Diet and Supplements','Gym Apparel','Footer','Accessories'])
     const [catagories, setcatagories] = useState(ctg_list)
     
 

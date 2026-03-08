@@ -25,7 +25,7 @@ const Home = () => {
 // simple products 
   const getproducts = async () => {
     try {
-      const res = await axios.get(`${data.url}/get/`, { params: { quantity: 10 } });
+      const res = await axios.get(`${data.url}/get/`, { params: { quantity: 8 } });
       const da = res.data;
       { Array.isArray(da) ? setproducts([...da]) : setproducts([]) }
     }
@@ -35,7 +35,7 @@ const Home = () => {
 // trending products 
   const gettrendproducts = async () => {
     try {
-      const res = await axios.get(`${data.url}/get/`, { params: { quantity: 6 } });
+      const res = await axios.get(`${data.url}/get/`, { params: { quantity: 5 } });
       const da = res.data;
       { Array.isArray(da) ? settrendproducts([...da]) : settrendproducts([]) }
     }
