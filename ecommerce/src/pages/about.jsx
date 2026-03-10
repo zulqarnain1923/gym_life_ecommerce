@@ -8,10 +8,10 @@ const About = () => {
         const navigation=useNavigate()
   const [formdata,setformdata]=useState()
   const [team,setteam]=useState([
-            { name: "Alex Carter", role: "Founder" },
-            { name: "Sarah Blake", role: "Head of Product" },
-            { name: "Daniel Lee", role: "Marketing Lead" },
-            { name: "Emma Stone", role: "Customer Support" },
+            { name: "Abid ali", role: "Founder" ,img:'https://images.unsplash.com/photo-1627161684458-a62da52b51c3?q=80&w=549&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'},
+            { name: "Kamran khan", role: "Head of Product" , img:'https://images.unsplash.com/photo-1648474484044-bb82df2f5a1f?q=80&w=464&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D' },
+            { name: "Fatima umer", role: "Marketing Lead" ,img:'https://images.unsplash.com/photo-1638482308400-54dee7d034f7?q=80&w=464&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D' },
+            { name: "Zeenat ", role: "Customer Support" ,img :'https://images.unsplash.com/photo-1645620359081-60f4b3514cd7?q=80&w=435&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D' },
           ])
   return (
     <>
@@ -76,7 +76,7 @@ const About = () => {
             <div
               key={index}
               className="bg-gray-800 py-2 rounded-xl text-center hover:scale-102 transition">
-              <div className="w-24 h-24 mx-auto mb-4 bg-gray-700 rounded-full">
+              <div className="w-24 h-24 mx-auto mb-4 bg-gray-700 rounded-full h-[100px] w-[100px] overflow-hidden ">
               <img src={member.img} alt="" />
               </div>
               <p className="font-semibold text-[25px] text-lime-300">{member.name}</p>
