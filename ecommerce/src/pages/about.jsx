@@ -1,6 +1,6 @@
-import React from 'react'
+import React, { useState }  from 'react'
 import Header_footer from '../components/header&footer';
-import Services from '../components/services/services'
+import { useNavigate } from 'react-router-dom';
 
 
 const About = () => {
