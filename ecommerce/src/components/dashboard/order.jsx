@@ -126,8 +126,8 @@ const Order = () => {
               </thead>
               <tbody>
                 {order && order.length > 1 ? order.map((o, index) => (
-                  <tr key={index} className="border-b hover:bg-gray-100 dark:hover:bg-gray-700 text-white" onClick={() => add_detail(index)}>
-                    <td className="border px-1">{o.id}</td>
+                  <tr key={index} className="border-b hover:bg-gray-100 dark:hover:bg-gray-700 text-white" >
+                    <td className="border px-1 hover:text-blue-500" onClick={() => add_detail(index)}>{o.id}</td>
                     <td className="border px-1">{o.full_name}</td>
                     <td className="border px-1">{o.total_amount}</td>
                     <td className="border px-1">

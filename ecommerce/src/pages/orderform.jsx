@@ -100,7 +100,7 @@ const OpenStreetMapForm = ({ toggle }) => {
     
     const s= data.setorderprd({...data.orderprd,...formData,address:query});
     const res=data.runfunctions(null,'placeorder',{...formData,address:query});
-    console.log(s)
+    // console.log(s)
     setFormData({...da.current})
     setQuery('')
     toggle(true)
