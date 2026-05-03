@@ -4,7 +4,7 @@ import { MdLocalShipping } from "react-icons/md"
 import { FaRegHandshake } from "react-icons/fa6";
 import { TbHours24 } from "react-icons/tb";
 import { GrSecure } from "react-icons/gr"
-
+import {Title} from '../smallstyling'
 import { useState } from "react";
 
 const features = [
@@ -38,14 +38,16 @@ const Features = () => {
   const [feature,setfeature]= useState(features)
 
   return (
-    <div className=" py-5 border-y-1  border-gray-100">
-        <p className='ms-4 text-[30px] text-white text-center font-bold rounded-4 border-b-1 w-[150px] '>Features</p>
 
-      <div className="max-w-[1100px] mx-auto px-4">
+    <div className=" pb-5 border-y-1  ">
+      <Title className="ms-3">Feature</Title>
+        {/* <p className='ms-4 text-[30px] text-white text-center font-bold rounded-4 border-b-1 w-[150px] '>Features</p> */}
+
+      <div className="max-w-[1100px] mx-auto px-4 up_section">
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 ">
           {feature.map((item,index) => (
-            <div key={index} className="flex items-center gap-4 group cursor-default bg-black border-1 border-yellow-500 rounded-4 p-2 hover:translate-y-[-5px] transition-all duration-500">
+            <div key={index} className="flex items-center gap-4 group cursor-default bg-black shadow-[0px_0px_2px_yellow] border-1 hover:border-yellow-500 rounded-4 p-2 hover:translate-y-[-5px] transition-all duration-500">
               
               <div className="w-16 h-16 bg-gray-300 shadow-sm rounded-full flex items-center justify-center transition-colors duration-300 group-hover:bg-green-400 group-hover:text-white  ">
                 {item.icon}

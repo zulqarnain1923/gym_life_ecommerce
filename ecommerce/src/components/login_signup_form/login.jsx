@@ -22,7 +22,7 @@ const Login = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(formData);
+    
   };
 
   const handelregister=(e)=>{
@@ -61,7 +61,7 @@ const Login = () => {
         />
 
         <button
-          onClick={(e)=> (data.runfunctions(e,'login',formData),console.log(formData))}
+          onClick={(e)=> (data.runfunctions(e,'login',formData))}
           type="submit"
           className="w-full bg-purple-600 hover:bg-purple-700 text-white p-3 rounded-lg font-semibold transition mt-4 rounded-pill"
         >

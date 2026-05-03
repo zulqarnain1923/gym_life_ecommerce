@@ -1,4 +1,4 @@
-import React, { use } from 'react'
+import React, { use, useRef } from 'react'
 import { createContext, useState, useEffect, } from 'react'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
@@ -12,215 +12,213 @@ export default function Context({ children }) {
     const [reguser, setreguser] = useState(null)
     const [loading, setloading] = useState(false)
     const [showcart, setshowcart] = useState(false)
-    const [orderprd,setorderprd]=useState({})
-    const [ requestproduct , setrequestproduct]=useState()
-    const [showuser,setshowuser]=useState(false)
+    const [orderprd, setorderprd] = useState({})
+    const [requestproduct, setrequestproduct] = useState()
+    const [showuser, setshowuser] = useState(false)
+    const [bottomnote, setbottomnote] = useState({ msg: "Welcome to our site" })
 
-    // const url = 'http://127.0.0.1:8000'
-    const url = 'https://zulqarnain111.pythonanywhere.com'
-    
+    const accessToken = useRef(null)
+
+    const url = 'http://localhost:8000'
+    // const url = 'https://zulqarnain111.pythonanywhere.com'
+
+
+
+
     const checkuserauth = async () => {
-        let refresh_token = localStorage.getItem('refresh')
-        if (refresh_token) {
-            try {
-                const res = await axios.post(`${url}/api/user/token/`, { refresh: refresh_token })
-                if (res.data.access) {
-                    localStorage.setItem('access', res.data.access)
-                    return true
-                } else { return false }
+        try {
+            const res = await axios.post(`${url}/api/user/token/`, {}, { withCredentials: true })
+            if (res.data.access) {
+                accessToken.current = res.data.access;
+                return true
+            } else { return false }
+        }
+        catch (error) {
+            if (error.response?.status === 401) {
+                alert('session expired please login again')
+                Navigation('/login')
+                return false
             }
-            catch (error) {
-                if (error.response.status === 401) {
-                    alert('session expired please login again')
-                    localStorage.removeItem('refresh')
-                    localStorage.removeItem('access')
-                    Navigation('/login')
-                    return false
-                }
-            }
-        } else {
-            alert('please register your account or login')
-            Navigation('/register')
-            return false
         }
     }
-
 
     async function login(data) {
         try {
-            const res = await axios.post(`${url}/api/login/`, data)
-            console.log(res.data)
-            localStorage.setItem('refresh', res.data.refresh)
-            localStorage.setItem('access', res.data.access)
+            const res = await axios.post(`${url}/api/user/login/`, data, { withCredentials: true })
+            accessToken.current = res.data.access
+            getcartitem()
+            setshowuser(true)
             Navigation(-1)
-            // console.log("helow",data)
+            setbottomnote({ ...bottomnote, msg: res.data.message })
         }
         catch (error) {
-            alert('email and password does not match')
-            console.log('error', error.response.data)
+            // console.log('error', error.response.data.message)
+            setbottomnote({ msg: error.response.data.message })
+            
         }
-    }
 
+    }
 
     async function register(data) {
         try {
-            const res = await axios.post(`${url}/api/user/register/`, { ...data })
-            alert(res.data)
-            localStorage.setItem('refresh', res.data.refresh)
-            alert('registeration successful')
-            Navigation(-1)
+            const res = await axios.post(`${url}/api/user/register/`, { ...data },{withCredentials:true})
+            let resdata=res.data;
+            let flag=false
+
+            if (res.data && res.data.access) {
+                accessToken.current = res.data.access;
+                delete data.access  ;}           
+
+            for (let key of Object.keys(resdata)){
+                
+                if (key=== 'message'){
+                    setbottomnote({msg:resdata[key]});
+                    flag=true
+                    break;
+                }
+                if (key === 'errormessage'){
+                    setbottomnote({msg:resdata[key]})
+                    break;
+                }
+                
+            }
+
+            if (!flag && Object.keys(resdata).length >0){
+                const firstvalue=Object.values(resdata)[0]
+                setbottomnote({...bottomnote,msg:firstvalue})
+            }
+
+            (flag?Navigation(-1):null);
         }
         catch (error) {
-            console.log(error.response.data)
+            console.log(error)
             alert('data cannot save')
         }
     }
 
-    async function logout(){
-            localStorage.removeItem('refresh')
-            localStorage.removeItem('access')
-            
-            setshowuser(false)
-            alert('user is loged out')
-    }
+    async function logout() {
 
-    async function checks(){
-        const refresh =localStorage.getItem('refresh')
-        if (refresh){
-            console.log('hello')
-            try {
-                const res = await axios.post(`${url}/api/user/token/`, { refresh: refresh })
-                if (res.data.access) {
-                    localStorage.setItem('access', res.data.access)
-                    setshowuser(true)
-                    
-                    console.log(showuser)
-
-                } else {
-                    setshowuser(false) 
-                    console.log(showuser)
-                    return false }
-            }catch{setshowuser(false)}
-
-        }
+        const res = await axios.delete(`${url}/api/user/logout/`, { withCredentials: true })
         
+        setbottomnote({msg:res.data.message})
+        accessToken.current = null
+        setshowuser(false)
+        getcartitem()
+        console.log('ok',res.data.message,accessToken.current)
+
     }
 
     const cartitem = async (data) => {
-        console.log('functin is called', data)
-        let access_token = localStorage.getItem('access')
-        let refresh_token = localStorage.getItem('refresh')
-        if (!refresh_token && !access_token) {
-            alert('please login first')
-            Navigation('/login')
-            return
-        }
+
         try {
-            const res = await axios.post(`${url}/api/user/addtocart/`, { ...data }, { headers: { Authorization: `Bearer ${access_token}` } })
-            alert('item added to cart successfully')
+            const res = await axios.post(`${url}/api/user/addtocart/`, { ...data }, { headers: { Authorization: `Bearer ${accessToken.current}` } })
             getcartitem()
-            // console.log(res.data)
+            setbottomnote({ msg: res.data.message })
         }
         catch (error) {
-            console.log('error', error.response.data)
+
             if (error.response.status === 401) {
                 const isauth = await checkuserauth()
                 if (isauth) {
-                    let access_token = localStorage.getItem('access')
-                    const res = await axios.post(`${url}/api/user/addtocart/`, data, { headers: { Authorization: `Bearer ${access_token}` } })
-                    // console.log(res.data[0]) 
-                    alert('item added to cart successfully')
+
+                    const res = await axios.post(`${url}/api/user/addtocart/`, data, { headers: { Authorization: `Bearer ${accessToken.current}` } })
                     getcartitem()
+                    setbottomnote({ msg: res.data.message })
+
                 }
             }
         }
     }
 
     const getcartitem = async () => {
-        let access_token = localStorage.getItem('access')
-        let refresh_token = localStorage.getItem('refresh')
-        if (refresh_token) {
-            try {
-                const res = await axios.get(`${url}/api/user/addtocart/`, { headers: { Authorization: `Bearer ${access_token}` } })
-                setshowcart(res.data)
-                console.log(res.data)
-            }
-            catch (error) {
-                if (error.response.status === 401) {
-                    const isauth = await checkuserauth()
-                    if (isauth) {
-                        let access_token = localStorage.getItem('access')
-                        const res = await axios.get(`${url}/api/user/addtocart/`, { headers: { Authorization: `Bearer ${access_token}` } })
-                        setshowcart(res.data)
-                        console.log(res.data)
-                    }
-                } else {
-                    alert('something went wrong please login again')
-                    localStorage.removeItem('refresh')
-                    localStorage.removeItem('access')
-                    Navigation('/login')
-                    console.log('error in getcartitem', error.response.data)
+        try {
+            const res = await axios.get(`${url}/api/user/addtocart/`, { headers: { Authorization: `Bearer ${accessToken.current}` } })
+            setshowcart(res.data)
+        }
+        catch (error) {
+            if (error.response.status === 401) {
+                const isauth = await checkuserauth()
+
+                if (isauth) {
+                    const res = await axios.get(`${url}/api/user/addtocart/`, { headers: { Authorization: `Bearer ${accessToken.current}` } })
+                    setshowcart(res.data)
                 }
             }
-        } else {
-            alert('please login first')
-            Navigation('/login')
+            else {
+                alert('something went wrong please login again')
+                accessToken.current = null;
+                Navigation('/login')
+            }
         }
-
     }
 
     const deletecartitem = async (id) => {
-        const access = localStorage.getItem('access')
+
         try {
-            const res = await axios.delete(`${url}/api/user/addtocart/`, { data: { pr_id: id }, headers: { Authorization: `Bearer ${access}` } })
+            const res = await axios.delete(`${url}/api/user/addtocart/`, { data: { pr_id: id }, headers: { Authorization: `Bearer ${accessToken.current}` } })
             getcartitem()
-            console.log(res.data)
+            setbottomnote({msg:res.data.message})
         }
         catch (error) {
             if (error.response.status === 401) {
                 const isauth = await checkuserauth()
                 if (isauth) {
                     const access = localStorage.getItem('access')
-                    const res = await axios.delete(`${url}/api/user/addtocart/`, { data: { pr_id: id }, headers: { Authorization: `Bearer ${access}` } })
+                    const res = await axios.delete(`${url}/api/user/addtocart/`, { data: { pr_id: id }, headers: { Authorization: `Bearer ${accessToken.current}` } })
                     getcartitem()
-                    console.log(res.data)
+                    setbottomnote({msg:res.data.message})
                 }
             }
         }
     }
 
-    const placeorder= async(data)=>{
-        let refresh=localStorage.getItem('refresh')
-        let access=localStorage.getItem('access')
-        if (refresh){
-            try{
-            const res =await axios.post(`${url}/order/add/`,{...orderprd,...data},{headers:{Authorization:`Bearer ${access}`}})
-            console.log(res.data)
-            alert('order is placed successfully')
+    const placeorder = async (data) => {
+
+        try {
+            const res = await axios.post(`${url}/order/add/`, { ...orderprd, ...data }, { headers: { Authorization: `Bearer ${accessToken.current}` } })
+            setbottomnote({ msg: res.data.message })
             return true
-            }
-            catch (error){
-                console.log({error:error.response})
-                if (error.response.status== 401){
-                    const isauth=await checkuserauth()
-                    if (isauth){
-                        let access=localStorage.getItem('access')
-                        const res = await axios.post (`${url}/order/add/`,{...orderprd,...data},{headers:{Authorization:`Bearer ${access}`}})
-                        console.log(res.data)
-                        alert('order is placed successfully')
-                        return true
-                    }
-                }else{
-                    console.log(error.response.data)
-                    alert(error.response.data.status)
+        }
+        catch (error) {
+            
+            if (error.response.status == 401) {
+                console.log(error.response.data.message)
+                const isauth = await checkuserauth()
+                if (isauth) {
+                    const res = await axios.post(`${url}/order/add/`, { ...orderprd, ...data }, { headers: { Authorization: `Bearer ${accessToken.current}` } })
+                    console.log(res.data)
+                    setbottomnote({ msg: res.data.message })
                     return false
                 }
+            } else {
+                console.log(error.response.data)
+                alert(error.response.data)
+                return false
             }
-        }else{
-            Navigation('/login')
         }
     }
-    
+
+
+    useEffect(() => {
+        const reload = async () => {
+            try {
+                const res = await axios.post(`${url}/api/user/token/`, {}, { withCredentials: true })
+                if (res.data.access) {
+                    accessToken.current = res.data.access;
+                    setshowuser(true)
+                    getcartitem()
+                }
+            }
+            catch (error) {
+                if (error.response.status === 401) {
+                    accessToken.current = null
+                }
+            }
+        }
+        reload();
+    }, [])
+
+
     function runfunctions(e = null, type, data = null) {
         if (e) { e.preventDefault() }
         if (type === 'login') { login(data) }
@@ -229,25 +227,26 @@ export default function Context({ children }) {
         if (type === 'cartitem') { cartitem(data) }
         if (type === 'getcartitem') { getcartitem() }
         if (type === 'deletecartitem') { deletecartitem(data) }
-        if (type === 'placeorder') {placeorder(data)}
-        if (type === 'logout') { logout()}
-        if (type === 'check') {checks()}
-        }
+        if (type === 'placeorder') { placeorder(data) }
+        if (type === 'logout') { logout() }
+        if (type === 'check') { checks() }
+    }
 
     const data = {
         runfunctions: runfunctions,
         loginuser: setloguser,
         registeruser: setreguser,
         showcart: showcart,
-        setorderprd:setorderprd,
-        orderprd:orderprd,
-        url:url,
-        requestproduct:requestproduct,
-        setrequestproduct:setrequestproduct,
-        showuser:showuser,
-    
+        setorderprd: setorderprd,
+        orderprd: orderprd,
+        url: url,
+        requestproduct: requestproduct,
+        setrequestproduct: setrequestproduct,
+        showuser: showuser,
+        setbottomnote: setbottomnote,
+        bottomnote: bottomnote,
     }
-    console.log(orderprd)
+
 
     return (
         <Authcontext.Provider value={data}>

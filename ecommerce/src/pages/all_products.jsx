@@ -6,30 +6,34 @@ import { useState, useRef, useEffect, useContext } from 'react'
 import { Authcontext } from '../components/context/context'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
-import { ArrowRight } from 'lucide-react'
-import { useSearchParams } from "react-router-dom";
+import { ArrowRight ,Cross} from 'lucide-react'
+import { useSearchParams,useParams } from "react-router-dom";
 
 
 
 
 function All_products() {
+    const data= useContext(Authcontext)
     const [searchParams] = useSearchParams();
     const ctg=searchParams.get('catagory')
     const name=searchParams.get('name')
-    const data= useContext(Authcontext)
+    const {sale_id}= useParams()
+    console.log(sale_id)
     const [catagory,setcatagory]=useState({})
-    const [products, setproducts] = useState([])
+    const [products, setproducts] = useState()
     const [filter, setfilter] = useState({})
     const [price, setprice] = useState({ minprice: '', maxprice: '' })
     const navigation = useNavigate()
-          
+    const [productloading,setproductloading]=useState(false)
+    const [showfilter,setshowfilter]=useState(false)
 
     const getproducts = async () => {
         try {
-       
-            const res = await axios.get(`${data.url}/get/`, { params: {...filter,catagory:ctg,name:name} });
+            setproductloading(true)
+            const res = await axios.get(`${data.url}/get/`, { params: {...filter,catagory:ctg,name:name,sale_id:sale_id} });
             const da = res.data;
             Array.isArray(da) ? setproducts([...da]) : setproducts([]);
+            setproductloading(false)
         }
         catch (error) { console.log(error.response.data) }
     };
@@ -47,16 +51,17 @@ function All_products() {
     }
     function call (){
         if (price.maxprice && price.minprice){setfilter({...price})}
-        else{alert('please provide both values')};
+        data.setbottomnote({msg:'please enter both values'})
     }
 
   return (
     <div>
       <HeaderFooter>
         <div className='relative'>
-          <div className='flex items-center border-1 border-gray-700 h-[50px] gap-5 w-full  bg-gray-900 '>
-            <p className='text-white  block pt-3 text-[20px]'>Filters:</p>
-            <div className='  flex  items-center w-[100%] gap-3'>
+          <button className={`text-white ms-3 h-[0px] ${showfilter? 'hidden' :'block'}`} onClick={()=>setshowfilter(true)} >Filter</button>
+          <div className={`flex items-center border-1 border-gray-700 h-[40px] gap-5 w-full bg-gray-900 relative z-1 ${showfilter?'top-[0px]':'top-[-150px]' }`} style={{'transition':'.6s'}}>
+            <Cross className='rotate-[45deg] text-gray-600 hover:text-gray-400 cursor-pointer ms-1' onClick={()=> setshowfilter(false)}></Cross>
+            <div className='flex items-center w-[100%] gap-3 '>
 
               <div className='flex items-center justify-center gap-2 '>
                 <label className='text-white text-[9px] sm:text-[12px]'>Min price:</label>
@@ -72,7 +77,7 @@ function All_products() {
 
             </div>
           </div>
-          <Allproducts products={products} navigate={navigate}/>
+          <Allproducts products={products} navigate={navigate} prdloading={productloading} />
         </div>
         <Services />
 

@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useContext, useRef } from 'react'
 
-import { Check } from 'lucide-react'
+import { Check,ArrowDown } from 'lucide-react'
 import { Authcontext } from '../context/context'
 
 const Prd_priview = ({ product, toggle }) => {
@@ -66,7 +66,10 @@ const Prd_priview = ({ product, toggle }) => {
     };
 
     const handleclick = (e) => {
-        e.preventDefault()
+       const review=document.getElementById('review')
+        review.scrollIntoView({
+            behavior:"smooth",
+        })
     }
 
     const handleadd = () => {
@@ -106,17 +109,17 @@ const Prd_priview = ({ product, toggle }) => {
     return (
         <>
             (<div className='w-full flex items-center justify-center border-1 border-bottom-[1px solid gray] mx-auto mb-5 pb-5 max-w-[1200px]'>
-                <div className='grid grid-cols-12 md:gap-4 p-2 items-center min-w-[100%]'>
+                <div className='grid grid-cols-12  md:gap-4 p-2 items-center min-w-[100%]'>
 
-                    <div className='col-span-12 sm:col-span-6 md:col-span-5 rounded-4 overflow-hidden w-[100%] position-relative ' >
+                    <div className='col-span-12 place-self-center sm:col-span-6 md:col-span-5 rounded-4 overflow-hidden w-[100%] position-relative ' >
                         <div className='max-w-[450px]  @container' onMouseMove={handleMouseMove} onMouseLeave={handleMouseLeave}>
                             <div className=' shrink-0 w-[clamp(90px,5cqw,120px)] h-[clamp(90px,5cqw,120px)] position-absolute left-2 top-2 border-1 border-gray-200' style={zoomStyle} ></div>
                             <img src={imgs[index]} alt="" width="100%" className='rounded-3 ' />
 
                         </div>
-                        <div className='@container flex flex-wrap border border-white px-1 mt-2 rounded-4 '>
+                        <div className='@container flex flex-wrap border border-white px-1 mt-2 rounded-4 max-w-[450px]'>
                             {imgs.map((item, index) => (<div key={index} className='px-1 py-2 shrink-0 w-[clamp(40px,10cqw,60px)] ' onClick={() => setindex(index)}>
-                                <img src={item} alt="" className="w-full h-auto object-cover rounded-3" />
+                                <img src={item} alt="" className="w-full h-auto object-cover rounded-3 cursor-pointer" />
                             </div>
                             ))}
                         </div>
@@ -128,7 +131,12 @@ const Prd_priview = ({ product, toggle }) => {
                         {/* <p className='text-[30px] font-bold text-green-500 text-center'>SigmaForge<span className='text-yellow-500'>.pk</span></p> */}
                         <div className='flex justify-between'>
                             <p className='text-[28px] text-green-500 font-bold text-capitalize'>{product ? product.pr_name : null}</p>
-                            <a href='#review' className='text-[18px] text-gray-500 text-capitalize ' onClick={handleclick}>check review</a>
+                            <div>
+                            <p className='text-[15px] text-blue-500 text-capitalize hover:text-blue-600 cursor-pointer' onClick={handleclick}>check review</p>
+                            {product && product.sale_discount?
+                                                <p className='flex justify-center items-center text-white text-[12px] sm:text-[13px] font-bold z-1 cursor-pointer rounded-[15px] bg-red-500 px-1 transition-all  ' ><ArrowDown className='w-[12px]'/>{product.sale_discount}% Off</p>:null}
+                            
+                            </div>
                         </div>
                         <p className='min-w-[100%] max-w-[100%] w-full  text-gray-400'>{product ? product.pr_desc : null}</p>
 
@@ -163,8 +171,8 @@ const Prd_priview = ({ product, toggle }) => {
                             <button onClick={handleremove} className='border-1 border-red-500 rounded text-[50px] text-white w-7 h-7 '>-</button>
                         </div>
                         <div className='w-full px-2 flex justify-between mt-4'>
-                            <button className='w-[78%] bg-yellow-500 rounded-3 h-[40px] font-bold text-white ' onClick={() => (data.runfunctions(null, 'checkuser', null), formdata(), toggle(false))}><span className='text-[20px] capitalize hover:text-[22px] transition-all duration-[.4s] w-[100%] block'> order now</span></button>   {/*,toggle(false) */}
-                            <button className='w-[20%] bg-green-500 rounded-3 h-[40px] font-bold text-white '><span className='text-[20px] capitalize hover:text-[22px] transition-all duration-[.4s] w-[100%] block'> cart</span></button>
+                            <button className='w-[78%] bg-yellow-500 rounded-3 h-[40px] font-bold text-white ' onClick={() => (formdata(), toggle(false))}><span className='text-[20px] capitalize hover:text-[22px] transition-all duration-[.4s] w-[100%] block'> order now</span></button>   {/*,toggle(false) */}
+                            <button className='w-[20%] bg-green-500 rounded-3 h-[40px] font-bold text-white ' onClick={()=> (data.runfunctions(null,'cartitem',{pr_id:product.pr_id}))}><span className='text-[20px] capitalize hover:text-[22px] transition-all duration-[.4s] w-[100%] block' > cart</span></button>
                         </div>
                     </div>
                 </div>

@@ -7,18 +7,22 @@ import { BiSolidCart } from "react-icons/bi";
 import { PiStarLight } from "react-icons/pi";
 import { PiStarFill } from "react-icons/pi";
 import { NavLink } from 'react-router-dom';
+import { ArrowDown } from 'lucide-react';
 
 
 
 
 export default function card({item ,navigate}) {
     const data=useContext(Authcontext)
+   
     return (
-        <div>
+        <div className='relative'>
             {/* Card Main Container - Isay bhi @container banaya ja sakta hai agar zaroorat ho */}
-            <div className="px-1 pt-1 bg-black rounded-2 relative cursor-pointer border-green-500 hover:shadow-[0_0_20px_#ebd234] hover:border-yellow-500 transition-all duration-[.3s] hover:translate-y-[-10px] card">
+            <div className=" px-1 pt-1 bg-black rounded-2 relative cursor-pointer border-green-500 hover:shadow-[0_0_20px_#ebd234] hover:border-yellow-500 transition-all duration-[.3s] hover:translate-y-[-10px] card">
                 
-                <BiSolidCart className='absolute right-2 top-2 text-green-700 text-[33px] z-1 cursor-pointer rounded-[50%] hover:bg-green-300 p-1 transition-all' onClick={()=> (data.runfunctions(null,'cartitem',{pr_id:item.pr_id} ),console.log('helo'))}/>
+                <BiSolidCart className='absolute right-2 top-2 text-green-700 text-[33px] z-1 cursor-pointer rounded-[50%] hover:bg-green-300 p-1 transition-all' onClick={()=> (data.runfunctions(null,'cartitem',{pr_id:item.pr_id}))}/>
+                {item.sale_discount?
+                    <p className='flex justify-center items-center absolute left-1 top-1 text-white text-[10px] font-bold z-1 cursor-pointer rounded-[15px] bg-red-500 px-1 transition-all  ' ><ArrowDown className='w-[12px]'/>{item.sale_discount}%</p>:null}
                 {/* <FaRegHeart className='absolute right-2 top-[40px] text-red-500 text-[30px] z-1 cursor-pointer rounded-[50%] hover:bg-red-300 p-1 transition-all' /> */}
                 
                 <div className='w-[100%] overflow-hidden rounded-2 relative' onClick={()=>navigate(item.pr_id)}>

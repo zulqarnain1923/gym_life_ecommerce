@@ -29,7 +29,7 @@ function CommentBox() {
 
   return (
     <>
-      <div className="border-1 border-[1px solod gray grid grid-cols-1 md:grid-cols-12 ">
+      <div className="border-1 border-[1px solod gray grid grid-cols-1 md:grid-cols-12 " id='review'>
         <div className="max-w-3xl  p-4 border-1 shadow col-span-7 xl:col-span-7" id="review">
           <p className="text-xl font-bold mb-4 text-[25px] text-green-500 capitalize">Customer Riviews</p>
 

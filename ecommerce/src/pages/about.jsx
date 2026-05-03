@@ -26,8 +26,8 @@ const About = () => {
           }}
         ></div>
 
-        <div className="relative z-10 px-4">
-          <p className="text-[35px] text-white md:text-6xl font-bold mb-4">
+        <div className="relative z-1 px-4">
+          <p className="text-[35px] text-white md:text-6xl font-bold mb-4 ">
             Empowering Your Fitness Journey
           </p>
           <p className="text-sm md:text-md text-gray-400 max-w-xl mx-auto">
@@ -35,7 +35,7 @@ const About = () => {
             limits and fuel your progress.
           </p>
 
-          <button className="mt-6 px-4 py-2 bg-lime-500 hover:bg-lime-400 text-black font-semibold rounded-3 transition " onClick={()=> navigation('/all/products')}>
+          <button className="mt-6 px-4 py-2 bg-green-500 hover:bg-lime-500 text-black font-semibold rounded-3 transition " onClick={()=> navigation('/all/products')}>
             Shop Now
           </button>
         </div>
@@ -59,13 +59,13 @@ const About = () => {
           </p>
         </div>
 
-        <div className="w-full h-80 bg-gray-800 rounded-xl flex items-center justify-center overflow-hidden">
+        <div className="w-full h-80 bg-gray-800 rounded-xl flex items-center justify-center overflow-hidden left_section">
          <img src="https://plus.unsplash.com/premium_photo-1664478068789-51a77f562f6f?q=80&w=872&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="" className='opacity-24' />
         </div>
       </section>
 
       {/* TEAM SECTION */}
-      <section className="py-5 px-2 max-w-7xl mx-auto">
+      <section className="py-5 px-2 max-w-7xl mx-auto up_section">
         <p className="text-4xl font-bold text-center mb-12 text-green-500 mb-5">
           Meet the Team
         </p>
@@ -88,7 +88,7 @@ const About = () => {
       </section>
 
       {/* CTA / NEWSLETTER */}
-      <section className="bg-gray-800 py-20 text-center py-5 mt-4">
+      <section className="bg-gray-800 py-20 text-center py-5 mt-4 px-3 left_section">
         <p className="text-3xl font-bold mb-4 text-yellow-500">
           Join Our Fitness Community
         </p>
@@ -104,10 +104,10 @@ const About = () => {
             placeholder="Enter your email"
             value={formdata}
             onChange={(e)=> setformdata(e.target.value)}
-            className="px-4 py-3 rounded-lg bg-gray-900 border border-gray-700 text-white flex-1"
+            className="px-4 py-2 md:py-3 rounded-lg bg-gray-900 border border-gray-700 text-white flex-1"
           />
 
-          <button className="px-6 py-3 px-2 bg-lime-500 hover:bg-lime-400 text-black font-semibold rounded-3" onClick={()=> setformdata('')}>
+          <button className="px-6 py-2 md:py-3 px-2 bg-green-500 hover:bg-lime-500 text-black font-semibold rounded-3" onClick={()=> setformdata('')}>
             Subscribe
           </button>
         </div>
