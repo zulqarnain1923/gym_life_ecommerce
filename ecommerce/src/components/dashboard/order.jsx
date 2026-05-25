@@ -54,7 +54,7 @@ const Order = () => {
   const updateorder = async () => {
     try {
       const res = await axios.put(`${data.url}/order/add/`, { ...orderupdate })
-      console.log(res.data)
+    
     }
     catch (error) {
       console.log(error.response.data)
@@ -74,7 +74,7 @@ const Order = () => {
   function add_detail(index) {
     setorderdetail([order[index]])
     setcheck(false)
-    console.log('helo')
+   
   }
 
   return (

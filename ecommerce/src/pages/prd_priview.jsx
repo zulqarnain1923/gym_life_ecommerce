@@ -20,9 +20,9 @@ const Prd_priview = () => {
         async function params() {            
             try{
                 const res= await axios.get(`${data.url}/get/${id}`)
-                console.log(res.data)
+                
                 res.data?setproduct(res.data):{msg:'data not fetched'}
-                console.log(pram)
+                
             }
             catch (error){
                 console.log(error.response.data)

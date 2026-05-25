@@ -102,7 +102,7 @@ const Prd_priview = ({ product, toggle }) => {
             .join(", ");
 
 
-        // console.log(orderinfo.current)
+     
         data.setorderprd({ ...orderinfo.current, variant: d })
     }
 

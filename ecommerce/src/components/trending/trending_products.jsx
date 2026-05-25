@@ -30,7 +30,7 @@ function Products({products,navigate,loading}) {
         <div className='flex gap-3 overflowx-scroll py-5 '>
           {products?products.map((item, index) => (
             <div key={index} className="p-1 pb-2 bg-black w-[240px] rounded-4 relative cursor-pointer hover:shadow-[0_0_20px_yellow] border-1 hover:border-yellow-500 transition-all duration-[.3s] hover:translate-y-[-10px] ">
-              <BiSolidCart  className='absolute right-2 top-2 text-green-700 text-[33px] z-1 cursor-pointer rounded-[50%] hover:bg-green-300 p-1 transition-all' onClick={()=> (data.runfunctions(null,'cartitem',{pr_id:item.pr_id} ),console.log('helo'))} />
+              <BiSolidCart  className='absolute right-2 top-2 text-green-700 text-[33px] z-1 cursor-pointer rounded-[50%] hover:bg-green-300 p-1 transition-all' onClick={()=> (data.runfunctions(null,'cartitem',{pr_id:item.pr_id} ))} />
               <div className='w-[232px] h-[220px] overflow-hidden rounded-4 relative'>
                 <div className='h-[18px] w-[100px] bg-red-900 z-1 rotate-[-45deg] absolute text-white top-3 left-[-30px] text-center text-[13px]'>Trending</div>
 

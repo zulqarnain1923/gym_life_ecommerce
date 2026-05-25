@@ -14,7 +14,7 @@ const Product = () => {
         try {
             const res = await axios.get(`${data.url}/get/`, { params: { ...params } })
 
-            console.log(res.data);
+           
             setproduct(res.data);
         }
         catch (error) {

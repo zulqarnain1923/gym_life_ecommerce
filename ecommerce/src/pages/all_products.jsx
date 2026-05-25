@@ -18,7 +18,6 @@ function All_products() {
     const ctg=searchParams.get('catagory')
     const name=searchParams.get('name')
     const {sale_id}= useParams()
-    console.log(sale_id)
     const [catagory,setcatagory]=useState({})
     const [products, setproducts] = useState()
     const [filter, setfilter] = useState({})

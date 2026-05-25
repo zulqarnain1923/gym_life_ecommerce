@@ -88,7 +88,7 @@ const Header = () => {
 
     const searchinput=(e)=>{
         if (e.key === 'Enter'){
-            console.log('enter is pressed')
+            
             searchprd()
         }
     }

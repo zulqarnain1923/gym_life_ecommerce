@@ -27,7 +27,8 @@ export default function Context({ children }) {
 
     const checkuserauth = async () => {
         try {
-            const res = await axios.post(`${url}/api/user/token/`, {}, { withCredentials: true })
+            const refresh_token = localStorage.getItem('refresh_token')
+            const res = await axios.post(`${url}/api/user/token/`, { refresh_token: refresh_token },)
             if (res.data.access) {
                 accessToken.current = res.data.access;
                 return true
@@ -46,49 +47,52 @@ export default function Context({ children }) {
         try {
             const res = await axios.post(`${url}/api/user/login/`, data, { withCredentials: true })
             accessToken.current = res.data.access
+            localStorage.setItem('refresh_token', res.data.refresh)
             getcartitem()
             setshowuser(true)
             Navigation(-1)
             setbottomnote({ ...bottomnote, msg: res.data.message })
         }
         catch (error) {
-            // console.log('error', error.response.data.message)
+        
             setbottomnote({ msg: error.response.data.message })
-            
+
         }
 
     }
 
     async function register(data) {
         try {
-            const res = await axios.post(`${url}/api/user/register/`, { ...data },{withCredentials:true})
-            let resdata=res.data;
-            let flag=false
+            const res = await axios.post(`${url}/api/user/register/`, { ...data }, { withCredentials: true })
+            let resdata = res.data;
+            let flag = false
 
             if (res.data && res.data.access) {
+                localStorage.setItem('refresh_token', res.data.refresh);
                 accessToken.current = res.data.access;
-                delete data.access  ;}           
-
-            for (let key of Object.keys(resdata)){
-                
-                if (key=== 'message'){
-                    setbottomnote({msg:resdata[key]});
-                    flag=true
-                    break;
-                }
-                if (key === 'errormessage'){
-                    setbottomnote({msg:resdata[key]})
-                    break;
-                }
-                
+                delete data.access;
             }
 
-            if (!flag && Object.keys(resdata).length >0){
-                const firstvalue=Object.values(resdata)[0]
-                setbottomnote({...bottomnote,msg:firstvalue})
+            for (let key of Object.keys(resdata)) {
+
+                if (key === 'message') {
+                    setbottomnote({ msg: resdata[key] });
+                    flag = true
+                    break;
+                }
+                if (key === 'errormessage') {
+                    setbottomnote({ msg: resdata[key] })
+                    break;
+                }
+
             }
 
-            (flag?Navigation(-1):null);
+            if (!flag && Object.keys(resdata).length > 0) {
+                const firstvalue = Object.values(resdata)[0]
+                setbottomnote({ ...bottomnote, msg: firstvalue })
+            }
+
+            (flag ? Navigation(-1) : null);
         }
         catch (error) {
             console.log(error)
@@ -98,13 +102,13 @@ export default function Context({ children }) {
 
     async function logout() {
 
-        const res = await axios.delete(`${url}/api/user/logout/`, { withCredentials: true })
-        
-        setbottomnote({msg:res.data.message})
+        // const res = await axios.delete(`${url}/api/user/logout/`, { withCredentials: true })
+        localStorage.removeItem("refresh_token")
+        setbottomnote({ msg: 'logout successfully' })
         accessToken.current = null
         setshowuser(false)
-        getcartitem()
-        console.log('ok',res.data.message,accessToken.current)
+        setshowcart(null)
+    
 
     }
 
@@ -157,7 +161,7 @@ export default function Context({ children }) {
         try {
             const res = await axios.delete(`${url}/api/user/addtocart/`, { data: { pr_id: id }, headers: { Authorization: `Bearer ${accessToken.current}` } })
             getcartitem()
-            setbottomnote({msg:res.data.message})
+            setbottomnote({ msg: res.data.message })
         }
         catch (error) {
             if (error.response.status === 401) {
@@ -166,7 +170,7 @@ export default function Context({ children }) {
                     const access = localStorage.getItem('access')
                     const res = await axios.delete(`${url}/api/user/addtocart/`, { data: { pr_id: id }, headers: { Authorization: `Bearer ${accessToken.current}` } })
                     getcartitem()
-                    setbottomnote({msg:res.data.message})
+                    setbottomnote({ msg: res.data.message })
                 }
             }
         }
@@ -175,18 +179,17 @@ export default function Context({ children }) {
     const placeorder = async (data) => {
 
         try {
-            const res = await axios.post(`${url}/order/add/`, { ...orderprd, ...data }, { headers: { Authorization: `Bearer ${accessToken.current}` } })
+            const res = await axios.post(`${url}/order/add/order/`, { ...orderprd, ...data }, { headers: { Authorization: `Bearer ${accessToken.current}` } })
             setbottomnote({ msg: res.data.message })
             return true
         }
         catch (error) {
-            
+
             if (error.response.status == 401) {
-                console.log(error.response.data.message)
+           
                 const isauth = await checkuserauth()
                 if (isauth) {
-                    const res = await axios.post(`${url}/order/add/`, { ...orderprd, ...data }, { headers: { Authorization: `Bearer ${accessToken.current}` } })
-                    console.log(res.data)
+                    const res = await axios.post(`${url}/order/add/order/`, { ...orderprd, ...data }, { headers: { Authorization: `Bearer ${accessToken.current}` } })
                     setbottomnote({ msg: res.data.message })
                     return false
                 }
@@ -202,12 +205,16 @@ export default function Context({ children }) {
     useEffect(() => {
         const reload = async () => {
             try {
-                const res = await axios.post(`${url}/api/user/token/`, {}, { withCredentials: true })
-                if (res.data.access) {
-                    accessToken.current = res.data.access;
-                    setshowuser(true)
-                    getcartitem()
+                const refresh_token = localStorage.getItem('refresh_token')
+                if (refresh_token) {
+                    const res = await axios.post(`${url}/api/user/token/`, { refresh_token: refresh_token })
+                    if (res.data.access) {
+                        accessToken.current = res.data.access;
+                        setshowuser(true)
+                        getcartitem()
+                    }
                 }
+
             }
             catch (error) {
                 if (error.response.status === 401) {
